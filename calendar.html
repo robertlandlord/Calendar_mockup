@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<title>Calendar</title>
+	<link rel="stylesheet" href="calendar.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+</head>
+<body>
+	<h1>Calendar!!!</h1>
+	<div id ="login-div">
+		<form id="login-form">
+			<input type="text" name="username" id="username">
+			<input type="password" name="password" id="password">
+			<button type="button" value = "Log in" id= "login_btn">Log in</button>
+		</form>
+	</div>
+	
+	<div id ="user-creation-div">
+		<form id="creation-form">
+			<input type="text" name="new-user" id="newuser">
+			<input type="password" name="new-pass" id="newpass">
+			<button type="button" value = "Create" id="create_btn">Create User</button>
+		</form>
+	</div>
+    
+    <div id="logout-div">
+        <button type="button" value="Logout" id="logout_btn">Log Out</button>
+    </div>
+	<div id="user-info">
+        <h4 id="logged-user">Logged in!
+        </h4>
+    </div>
+	
+	<div class="printed-date">
+		<h3 id = "full-date"></h3>
+	</div>
+	<div class="left-right-buttons">
+		<button class = "navigation-buttons" id = "left-button"><strong>Last</strong></button>
+		<button class = "navigation-buttons" id = "right-button"><strong>Next</strong></button>
+	</div>
+	<br>
+	<div>
+        <div class="event-popup" id="event-div">
+            <div class="popup-header">
+                <h2>Event Creation</h2>
+                <strong id="temp-date-popup"></strong>
+            </div>
+            <form class="event-container" id="event-form">
+                <label>Title:</label><br>
+                <input type="text" placeholder="Enter Title" name="title" id="event-title" required><br>
+                <label>Description:</label>
+                <input type="text" placeholder="Enter Description" name="description" id="event-desc" required><br>
+                <label>Start Time:</label>
+                <input type="time" name="start" id="event-start" required><br>
+                <label>End Time:</label>
+                <input type="time" name="end" id="event-end" required><br>
+                <label>Recurring (optional, only for days less than 29)</label>
+                <div class="recurring-days">
+                    <input type="checkbox" id = "recurr" class="recurr-day-of-week" value='yes'>Recurring?
+                </div>
+                <button type="button" id="event-submit" class="btn">Add event</button>
+                <button type="button" id="close-popup" class="btn close">Close</button>
+            </form>
+        </div>
+        <!--
+        modify box
+        -->
+		<div class="modify-popup" id="mod-div">
+            <h2 id="modify-header">Modify Event</h2>
+            <form class = "event-container" id="modify-form" method='post'>
+                <label>Title:</label><br>
+                <input id="mod-title" name="mod-title" type="text"><br>
+                Description:<input id="mod-desc" type="text"><br>
+                Start Time(empty defaults to no change): <input id="mod-start" type="time"><br>
+                End Time(empty defaults to no change): <input id="mod-end" type="time"><br>
+                New Date (empty defaults to no change): <input id="mod-date" type="date"><br>
+                <br>
+				<input type="hidden" name="token" value="<?php echo $_SESSION['token'];?>" />
+                <button type="button" id="modify-submit" class="btn">Modify event</button>
+                <button type="button" id="close-real-mod-popup" class="btn close">Close</button>
+            </form>
+        </div>
+        <!--
+        modify  and delete box
+        -->
+		<div class="event-mod-popup" id="event-mod-div">
+            <div class="popup-header" >
+                <h2>Event Modification</h2>
+                <strong id="temp-date-mod-popup"></strong>
+            </div>
+            <form class="event-container" id="event-mod-form"type='post'>
+				<input type="hidden" name="token" value="<?php echo $_SESSION['token'];?>" />
+				
+                <button type="button" id="event-modify-submit" class="btn">Modify event</button>
+				<button type="button" id="event-show-desc" class="btn">Show Description</button>
+				<button type="button" id="event-destroy-submit" class="btn">Delete event</button>
+                <button type="button" id="close-mod-popup" class="btn close">Close</button>
+				
+            </form>
+        </div>
+		
+		<table class="calendar-header-row-table">
+			<thead>
+				<tr>
+					<th class="day-of-week-header">
+						<span>Sun</span>
+					</th>
+					<th class="day-of-week-header">
+						<span>Mon</span>
+					</th>
+					<th class="day-of-week-header">
+						<span>Tue</span>
+					</th>
+					<th class="day-of-week-header">
+						<span>Wed</span>
+					</th>
+					<th class="day-of-week-header">
+						<span>Thu</span>
+					</th>
+					<th class="day-of-week-header">
+						<span>Fri</span>
+					</th>
+					<th class="day-of-week-header">
+						<span>Sat</span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<!--<div class = "calendar-row">-->
+						<!--<div class = "calendar-row-date">-->
+							<table class="calendar-row-date-table">
+								<tbody>
+									<tr>
+										<td class="calendar-row-date-cell"> </td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+									</tr>
+							</tbody>
+							</table>
+						<!--</div>-->
+						<!--<div class = "calendar-row-content">-->
+							<table class = "calendar-row-content-table">
+								<tbody>
+									<tr>
+										<td class="calendar-row-content-cell"></td>
+										<td class="calendar-row-content-cell"></td>
+										<td class="calendar-row-content-cell"></td>
+										<td class="calendar-row-content-cell"></td>
+										<td class="calendar-row-content-cell"></td>
+										<td class="calendar-row-content-cell"></td>
+										<td class="calendar-row-content-cell"></td>
+									</tr>
+							</tbody>
+							</table>
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class = "calendar-row">-->
+						<!--<div class = "calendar-row-date">-->
+							<table class="calendar-row-date-table">
+								<tbody>
+									<tr>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell" id="content-cell-10"></td>
+										<td class="calendar-row-date-cell" id="content-cell-11"></td>
+										<td class="calendar-row-date-cell" id="content-cell-12"></td>
+										<td class="calendar-row-date-cell" id="content-cell-13"></td>
+										<td class="calendar-row-date-cell" id="content-cell-14"></td>
+									</tr>
+							</tbody>
+							</table>
+						<!--</div>-->
+						<!--<div class = "calendar-row-content">-->
+							<table class = "calendar-row-content-table">
+								<tbody>
+									<tr>
+										<td class="calendar-row-content-cell" id="content-cell-15"></td>
+										<td class="calendar-row-content-cell" id="content-cell-16"></td>
+										<td class="calendar-row-content-cell" id="content-cell-17"></td>
+										<td class="calendar-row-content-cell" id="content-cell-18"></td>
+										<td class="calendar-row-content-cell" id="content-cell-19"></td>
+										<td class="calendar-row-content-cell" id="content-cell-20"></td>
+										<td class="calendar-row-content-cell" id="content-cell-21"></td>
+									</tr>
+							</tbody>
+							</table>
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class = "calendar-row">-->
+						<!--<div class = "calendar-row-date">-->
+							<table class="calendar-row-date-table">
+								<tbody>
+									<tr>
+										<td class="calendar-row-date-cell"> </td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+									</tr>
+							</tbody>
+							</table>
+						<!--</div>-->
+						<!--<div class = "calendar-row-content">-->
+							<table class = "calendar-row-content-table">
+								<tbody>
+									<tr>
+										<td class="calendar-row-content-cell" id="content-cell-22"></td>
+										<td class="calendar-row-content-cell" id="content-cell-23"></td>
+										<td class="calendar-row-content-cell" id="content-cell-24"></td>
+										<td class="calendar-row-content-cell" id="content-cell-25"></td>
+										<td class="calendar-row-content-cell" id="content-cell-26"></td>
+										<td class="calendar-row-content-cell" id="content-cell-27"></td>
+										<td class="calendar-row-content-cell" id="content-cell-28"></td>
+									</tr>
+							</tbody>
+							</table>
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class = "calendar-row">-->
+						<!--<div class = "calendar-row-date">-->
+							<table class="calendar-row-date-table">
+								<tbody>
+									<tr>
+										<td class="calendar-row-date-cell"> </td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+									</tr>
+							</tbody>
+							</table>
+						<!--</div>-->
+						<!--<div class = "calendar-row-content">-->
+							<table class = "calendar-row-content-table">
+								<tbody>
+									<tr>
+										<td class="calendar-row-content-cell" id="content-cell-29"></td>
+										<td class="calendar-row-content-cell" id="content-cell-30"></td>
+										<td class="calendar-row-content-cell" id="content-cell-31"></td>
+										<td class="calendar-row-content-cell" id="content-cell-32"></td>
+										<td class="calendar-row-content-cell" id="content-cell-33"></td>
+										<td class="calendar-row-content-cell" id="content-cell-34"></td>
+										<td class="calendar-row-content-cell" id="content-cell-35"></td>
+									</tr>
+							</tbody>
+							</table>
+					<!--</div>-->
+					<!--</div>-->
+					<!--<div class = "calendar-row">-->
+						<!--<div class = "calendar-row-date">-->
+							<table class="calendar-row-date-table">
+								<tbody>
+									<tr>
+										<td class="calendar-row-date-cell"> </td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+									</tr>
+							</tbody>
+							</table>
+						<!--</div>-->
+						<!--<div class = "calendar-row-content">-->
+							<table class = "calendar-row-content-table">
+								<tbody>
+									<tr>
+										<td class="calendar-row-content-cell" id="content-cell-36"></td>
+										<td class="calendar-row-content-cell" id="content-cell-37"></td>
+										<td class="calendar-row-content-cell" id="content-cell-38"></td>
+										<td class="calendar-row-content-cell" id="content-cell-39"></td>
+										<td class="calendar-row-content-cell" id="content-cell-40"></td>
+										<td class="calendar-row-content-cell" id="content-cell-41"></td>
+										<td class="calendar-row-content-cell" id="content-cell-42"></td>
+									</tr>
+							</tbody>
+							</table>
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class = "calendar-row">-->
+						<!--<div class = "calendar-row-date">-->
+							<table class="calendar-row-date-table">
+								<tbody>
+									<tr>
+										<td class="calendar-row-date-cell"> </td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+										<td class="calendar-row-date-cell"></td>
+									</tr>
+							</tbody>
+							</table>
+						<!--</div>-->
+						<!--<div class = "calendar-row-content">-->
+							<table class = "calendar-row-content-table">
+								<tbody>
+									<tr>
+										<td class="calendar-row-content-cell" id="content-cell-43"></td>
+										<td class="calendar-row-content-cell" id="content-cell-44"></td>
+										<td class="calendar-row-content-cell" id="content-cell-45"></td>
+										<td class="calendar-row-content-cell" id="content-cell-46"></td>
+										<td class="calendar-row-content-cell" id="content-cell-47"></td>
+										<td class="calendar-row-content-cell" id="content-cell-48"></td>
+										<td class="calendar-row-content-cell" id="content-cell-49"></td>
+									</tr>
+							</tbody>
+							</table>
+						<!--</div>-->
+					<!--</div>-->
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+
+
+<script src="./calendar.js"></script>
+<script src="./new_user_creation.js"></script>
+<script src="./logout.js"></script>
+</body>
+</html>

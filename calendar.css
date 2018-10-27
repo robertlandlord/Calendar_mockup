@@ -1,0 +1,142 @@
+body{
+    background-color: LavenderBlush;
+}
+.calendar-row-date-table{
+    table-layout: fixed;
+    overflow: hidden;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width:1200px;
+    height:140px;
+    position:absolute;
+    
+}
+.calendar-header-row-table{
+    table-layout: fixed;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width:1200px;
+}
+
+
+th{
+    border: 1px solid #dddddd;
+    text-align:center;
+    padding: 8px;
+}
+
+.calendar-row-date-cell{
+    border: 1px solid #dddddd;
+    text-align:right;
+    vertical-align: top;
+    padding: 8px;
+}
+
+
+.calendar-row-content-table{
+    table-layout: fixed;
+    overflow: hidden;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width:1200px;
+    height:140px;
+    position:relative;
+}
+.calendar-row-content-table td{
+    word-break:break-all;
+    text-align:center;
+    position:relative;
+    overflow: hidden;
+    
+   
+}
+
+.navigation-buttons{
+    height:30px;
+    width: 60px;
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~POPUP FORM~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+{box-sizing: border-box;}
+
+/* div */
+.event-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    background-color:white;
+    z-index: 9;
+    border-radius:15px;
+}
+/* form */
+.event-container {
+    max-width: 300px;
+    padding: 10px;
+}
+.popup-header {
+    max-width: 300px;
+    padding: 10px;  
+}
+/* inputs in form */
+.event-container input[type=text] {
+    width: 200px;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    border: none;
+    background: #f1f1f1;
+}
+.event-container input[type=text]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+/* buttons in form */
+.event-container .btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom:10px;
+    opacity: 0.8;
+    border-radius:15px;
+}
+/* buttons in form */
+.event-container .close {
+      background-color: red;
+}
+#logout_btn{
+    display:none;
+}
+#logged-user{
+    display:none;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~POPUP MOD FORM~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.event-mod-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 15px;
+    border: 3px solid #f1f1f1;
+    background-color:white;
+    z-index: 9;
+    border-radius:15px;
+}
+
+.modify-popup{
+    display: none;
+     border-radius:15px;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    border: 3px solid #f1f1f1;
+    background-color:white;
+    z-index: 9;
+}
+#modify-header{
+    padding:10px;
+}
+
